@@ -1,0 +1,33 @@
+
+🔄 DAY 2: Intro to the Silver Layer – Cleansing Raw Data for Insightful Use
+
+As I continue building my data engineering skills, today I took a deep dive into the Silver Layer of the data warehouse architecture—a critical stage where raw data from the bronze layer is cleansed, standardized, and made analytics-ready.
+
+🔍 What I learned today:
+
+✅ Data Exploration & Analysis
+Before transforming, I explored raw bronze data to understand relationships, table purposes, and join keys—drawing a visual integration model to map how systems like CRM and ERP connect.
+
+✅ Silver Layer DDL Design
+Created silver tables by copying bronze structures and enhancing them with metadata columns like `DW_CreateDate`, `DW_SourceSystem`, and `DW_FileLocation`. These additions help with lineage, troubleshooting, and data quality monitoring.
+
+✅ Data Cleansing in Action
+I focused on cleaning the `CRM_CustomerInfo` table by:
+
+* Removing duplicates using `ROW_NUMBER()`
+* Trimming unwanted spaces
+* Standardizing inconsistent values (e.g., gender abbreviations)
+* Validating data types and applying transformations
+
+✅ Full Load Strategy
+Used the TRUNCATE + INSERT pattern to ensure clean loads into silver tables.
+
+🛠️ It’s exciting to see how much clarity and quality can be added just by taking time to understand and clean your data. The silver layer bridges the gap between raw ingestion and meaningful insights.
+
+📌 Next up: building out more silver tables and prepping for transformations in the gold layer.
+
+\#Day2 #DataEngineering #DataWarehouse #SQLServer #SilverLayer #LearningInPublic #ETL #CleanData #CareerInData
+
+---
+
+Let me know if you'd like to include a screenshot or code snippet alongside it for visual engagement.
