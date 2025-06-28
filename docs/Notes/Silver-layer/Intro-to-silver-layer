@@ -1,0 +1,89 @@
+DAY - 2 Summary of the key concepts and steps:
+
+### Building the Silver Layer: From Raw to Clean Data
+
+The silver layer is where you cleanse, standardize, and prepare your raw data from the bronze layer for further analysis and modeling in the gold layer.
+
+---
+
+### 1. Analyze and Explore Data (Bronze Layer)
+
+Before any transformation, it's crucial to thoroughly **explore and understand the data in your bronze layer**.
+* **Purpose:** The bronze layer focuses on ingestion; the silver layer focuses on understanding and improving data quality.
+* **Key Activities:**
+    * **Understand Table Content:** What information does each table hold?
+    * **Identify Relationships:** How do tables connect to each other?
+    * **Limited Queries:** When exploring large tables, use `TOP N` (e.g., `SELECT TOP 1000 ROWS`) to avoid impacting system performance.
+* **Documentation (Visual Data Model/Integration Model):**
+    * As you explore, **document your understanding visually**. Drawing a data model or integration model (e.g., in a diagramming tool) helps you:
+        * Remember your findings.
+        * Visualize table relationships (e.g., Customer Info, Product Info, Sales Details).
+        * Identify potential join keys (e.g., `CustomerID`, `ProductKey`).
+        * Note data characteristics (e.g., "current and history product information" for tables with versioning).
+        * Group tables by source system (e.g., CRM, ERP) for clarity.
+    * Example findings during exploration:
+        * **CRM_CustomerInfo:** Contains customer IDs, keys, names, status, gender, creation date. Identifiers for joining are `ID` or `Key`.
+        * **CRM_ProductInfo:** Holds product ID, key, name, cost, line. Crucially, it contains **historical data** (start/end dates) for product cost changes. Joined via `ProductKey`, not `ProductID`.
+        * **CRM_SalesDetails:** A transactional table linking customers and products via `CustomerID` and `ProductKey`. Contains order details, dates, sales amounts, quantity, price.
+        * **ERP_Cust:** Contains customer key, birthday, and gender. Joins to `CRM_CustomerInfo` using `CustomerKey`.
+        * **ERP_Location:** Contains customer key and country. Joins to customer info using `CustomerKey`.
+        * **ERP_PX_Catalog:** Contains product categories and subcategories with an `ID`. This `ID` is embedded within the first five characters of the `ProductKey` in `CRM_ProductInfo`, forming a join.
+
+---
+
+### 2. Create DDL for Tables (Silver Layer)
+
+The silver layer tables are typically identical in structure to their bronze counterparts, with the addition of **metadata columns**.
+* **Specifications:**
+    * **Main Objective:** Clean and standardize data.
+    * **Loading Method:** Full load (truncate and then insert from bronze).
+    * **Transformations:** Extensive data transformations will be applied here (cleansing, normalization, standardization, derivation of new columns, data enrichment).
+    * **No New Data Model:** Still not building a new data model; just preparing the existing data.
+* **DDL Creation:**
+    * Start by copying the DDL scripts from the bronze layer.
+    * Perform a find-and-replace to change the schema from `bronze.` to `silver.`.
+* **Metadata Columns (Highly Recommended for Data Engineers):**
+    * These are additional columns *not* from the source system, added by data engineers to provide extra information about each record.
+    * **Examples:**
+        * `DW_CreateDate`: When the record was loaded into the data warehouse (default to `GETDATE()`).
+        * `DW_UpdateDate`: When the record was last updated.
+        * `DW_SourceSystem`: Origin of the data.
+        * `DW_FileLocation`: Lineage information.
+    * **Benefits:**
+        * **Troubleshooting:** Helps track corrupt data, identify when/where issues occurred.
+        * **Data Gaps:** Useful for detecting gaps, especially in incremental loads.
+        * **Labeling:** Effectively "labels" every record with crucial operational metadata.
+    * **Implementation:** Add columns like `DW_CreateDate DATETIME2 DEFAULT GETDATE()` to all silver layer tables.
+
+---
+
+### 3. Cleanse and Load `CRM_CustomerInfo` (Example)
+
+This section details the **data cleansing process** within the silver layer, using `CRM_CustomerInfo` as an example.
+
+* **Process:**
+    1.  **Detect Quality Issues:** Before transforming, thoroughly identify issues in the bronze data.
+    2.  **Develop Transformation Scripts:** Write queries to fix the identified issues.
+    3.  **Insert into Silver Layer:** Load the cleaned data into the silver table.
+* **Common Data Quality Checks & Transformations:**
+    * **Primary Key Uniqueness and Nulls:**
+        * **Detection:** Use `GROUP BY` on the primary key and `HAVING COUNT(*) > 1` to find duplicates. Check for `NULL` values in the primary key column.
+        * **Transformation (Deduplication):** If duplicates exist (e.g., same `ID` but different `CreateDate`), use **window functions** like `ROW_NUMBER() OVER (PARTITION BY [PrimaryKey] ORDER BY [TimestampColumn] DESC)` to assign a rank. Filter for `RANK = 1` to get the latest/most relevant record.
+    * **Unwanted Spaces (Leading/Trailing):**
+        * **Detection:** `WHERE [Column] != TRIM([Column])` identifies rows with leading/trailing spaces.
+        * **Transformation:** Use `TRIM([Column])` to remove them.
+    * **Data Consistency (Low Cardinality Columns):**
+        * **Detection:** Use `SELECT DISTINCT [Column]` to see all unique values. Look for abbreviations, inconsistent casing, or variations.
+        * **Transformation (Standardization):** Use `CASE WHEN` statements to map inconsistent values to standardized, friendly full names (e.g., 'F' to 'Female', 'M' to 'Male').
+        * **Handling Nulls:** Decide whether to keep nulls or replace them with a standard default value (e.g., 'Not Available', 'Unknown') using `ELSE` in the `CASE` statement. Always apply `UPPER()` and `TRIM()` to the source column within the `CASE` statement to handle variations.
+    * **Data Type Validation:**
+        * Ensure date columns are actual date types, not strings (this was already handled in DDL for this example).
+* **Insert Statement:** After all transformations, use an `INSERT INTO` statement to load the cleaned data into the silver layer table.
+    * Remember to explicitly list all columns in the `INSERT` statement, including the new `DW_CreateDate` column (which will auto-populate via its default value).
+* **Post-Load Validation (Silver Layer):**
+    * After loading, **re-run your quality checks** (primary key uniqueness, space checks, consistency checks) against the *silver layer* table. The expectation now is **no results** (i.e., no data quality issues found). This confirms your transformations were successful.
+
+---
+
+This detailed process for the silver layer emphasizes the iterative nature of data cleansing and the importance of both detection and transformation, all while building on a well-structured bronze layer.
+
