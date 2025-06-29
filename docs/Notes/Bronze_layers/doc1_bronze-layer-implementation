@@ -1,0 +1,17 @@
+🔄 Bronze Layer Implementation Completed
+
+  This update covers the full implementation of the bronze layer in the SQL Server–based data warehouse. Key steps included:
+  
+      -Analyzing source data context, structure, and access methods
+      
+      -Creating raw staging tables under the bronze schema
+      
+      -Using BULK INSERT for efficient loading from CSV source files
+      
+      -Truncating target tables before each load to ensure clean full loads
+      
+      -Wrapping the logic in a reusable bronze.load_bronze stored procedure
+      
+      -Performing basic data validation (row counts, column alignment)
+  
+  This forms the foundational step in the warehouse architecture, enabling a reliable pipeline for raw data ingestion.
