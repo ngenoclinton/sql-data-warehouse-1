@@ -1,0 +1,52 @@
+
+---
+
+🚀 Day 3 of my Data Engineering Learning Journey
+📌 Topic: What Do Entry-Level Data Engineers Actually Need?
+
+Today, I spent time studying several job descriptions from companies hiring Data Engineers — from intern positions to senior-level roles. My goal was to understand what skills, tools, and mindset are really expected, especially for someone starting out.
+
+Here’s what I learned 👇
+
+---
+
+🔧 Key Technical Skills in Demand:
+
+* SQL – The foundational language for querying and manipulating data.
+* Python – The go-to language for scripting, data wrangling, and automation.
+* ETL & Data Pipelines – Building and managing workflows to move and transform data.
+* Data Warehousing – Knowledge of platforms like Snowflake, Redshift, BigQuery.
+* Data Modeling – Understanding how to structure and organize data effectively.
+* Cloud Platforms – Especially AWS, GCP, and Azure.
+* Big Data Tools – Apache Spark, Hadoop, Kafka, Airflow.
+* Version Control – Git is often expected even for entry-level roles.
+* BI Tools – Familiarity with Power BI, Tableau, or Superset is a plus.
+
+---
+
+🧠 Soft Skills & Mindset:
+
+* Curiosity – A proactive attitude toward learning new tools and understanding data.
+* Collaboration – Working with product managers, analysts, and engineers is key.
+* Communication – Being able to explain data stories and technical decisions.
+* Documentation – A lot of roles emphasize documenting pipelines and architecture.
+
+---
+
+🎯 What Surprised Me:
+
+* Even intern roles are now touching on modern concepts like GenAI, vector databases, or real-time analytics.
+* Companies are emphasizing data quality and observability more than ever.
+* The transition from raw data to structured, trustworthy insights is a journey involving pipeline building, cleansing, modeling, validation, and governance.
+
+---
+
+
+This research helped me identify gaps in my own roadmap — and also reaffirmed the value of what I’ve already started: SQL, data modeling, warehousing, and now pipeline development.
+
+Focus on solid fundamentals, then layer in the cloud, automation, and real-time tech as you go!
+
+#DataEngineering #CareerGrowth #LearningJourney #ETL #SQL #Python #CloudComputing #BigData #LinkedInLearning #TechCareers #SelfTaughtEngineer
+
+---
+
