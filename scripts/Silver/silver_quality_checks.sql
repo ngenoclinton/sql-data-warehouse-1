@@ -149,6 +149,26 @@ from silver.crm_prd_info;
 
 SELECT TOP 1000 * from bronze.crm_sales_details
 
+select * from bronze.crm_sales_details;
+
+select sls_ord_num, count(*)
+from bronze.crm_sales_details
+group by sls_ord_num
+having count(*) > 1 or sls_ord_num is null;
+
+select sls_prd_key, count(*)
+from bronze.crm_sales_details
+group by sls_prd_key
+having count(*) > 1 or sls_prd_key is null; 
+
+select sls_cust_id, count(*)
+from bronze.crm_sales_details
+group by sls_cust_id
+having count(*) > 1 or sls_cust_id is null */
+
+--=========---------------------------------------------------=========
+--=========---------------------------------------------------=========
 SELECT TOP 1000 * from bronze.erp_cust_az12
 SELECT TOP 1000 * from bronze.erp_loc_a101
 SELECT TOP 1000 * from bronze.erp_px_cat_g1v2
+
