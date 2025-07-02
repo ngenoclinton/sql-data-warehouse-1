@@ -51,7 +51,7 @@ dwh_create_date DATETIME2 DEFAULT GETDATE()
 
 select * from silver.crm_prd_info; 
 
---- silver layer salesdetails info table ---
+--- silver layer sales details info table DDL---
 if OBJECT_ID ('silver.crm_sales_details', 'U') IS NOT NULL
   DROP TABLE silver.crm_sales_details;
 GO
@@ -60,9 +60,9 @@ create table silver.crm_sales_details(
 sls_ord_num nvarchar(50),
 sls_prd_key nvarchar(50),
 sls_cust_id int,
-sls_order_dt int,
-sls_ship_dt int,
-sls_due_dt int,
+sls_order_dt date,
+sls_ship_dt date,
+sls_due_dt date,   
 sls_sales int,
 sls_quantity int,
 sls_price int,
