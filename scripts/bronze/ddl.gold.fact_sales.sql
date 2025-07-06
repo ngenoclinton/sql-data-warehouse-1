@@ -21,3 +21,6 @@ SELECT sls_ord_num as order_number
   -- Fact connects multiple dimensions 
   -- if a table has Keys, Dates, and Measures, uncompared to Dimensio which describes an object. 
   -- 
+/*
+EXECUTE: select * from gold.fact_sales;
+*/
